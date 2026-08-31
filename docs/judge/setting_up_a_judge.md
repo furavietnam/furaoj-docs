@@ -88,7 +88,7 @@ $ docker run \
     --cap-add=SYS_PTRACE \
     -d \
     --restart=always \
-    furaoj/judge-tiervnoj:latest \
+    vnoj/judge-tiervnoj:latest \
     run -p 9999 -c /problems/judge.yml localhost -A 0.0.0.0 -a 12345
 ```
 
