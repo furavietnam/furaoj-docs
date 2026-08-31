@@ -44,7 +44,7 @@ You should see `(furaojsite)` prepended to your shell. Henceforth, `(furaojsite)
 Now, fetch the site source code:
 
 ```shell-session
-(furaojsite) $ git clone --recursive https://github.com/furavietnam/OJ.git site
+(furaojsite) $ git clone --recursive https://github.com/furavietnam/furaoj.git site
 (furaojsite) $ cd site
 ```
 
