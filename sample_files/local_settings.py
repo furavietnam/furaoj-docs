@@ -25,10 +25,22 @@ INSTALLED_APPS += (
 
 # Caching. You can use memcached or redis instead.
 # Documentation: <https://docs.djangoproject.com/en/3.2/topics/cache/>
+# LocMemCache.
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+#     },
+# }
+
+# Redis.
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-    },
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
 }
 
 # Your database credentials. PostgreSQL is the recommended backend.
@@ -107,7 +119,7 @@ ADMINS = (
 )
 
 # The sender for the aforementioned emails.
-SERVER_EMAIL = 'FuraOJ: Fura Online Judge <admin@furaoj.org>'
+SERVER_EMAIL = 'FuraOJ <noreply@oj.fura.io.vn>'
 
 
 ################################################

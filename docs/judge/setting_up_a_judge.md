@@ -58,7 +58,7 @@ The Docker image is maintained at [furaoj/judge-tierfuraoj](https://hub.docker.c
 The session below build a `judge-tierfuraoj`:
 
 ```shell-session
-$ git clone --recursive https://github.com/furavietnam/judge-server.git
+$ git clone --recursive https://github.com/VNOI-Admin/judge-server.git
 $ cd judge/.docker
 $ make judge-tierfuraoj
 ```
