@@ -4,7 +4,7 @@
 
 ```shell-session
 $ apt update
-$ apt install git gcc g++ make python3-dev python3-pip python3-venv libxml2-dev libxslt1-dev zlib1g-dev gettext curl redis-server pkg-config
+$ apt install git gcc g++ make python3-dev python3-pip python3-venv libxml2-dev libxslt1-dev zlib1g-dev gettext curl redis-server pkg-config zip
 $ curl -o- https://fnm.vercel.app/install | bash
 $ fnm install 24
 ```
