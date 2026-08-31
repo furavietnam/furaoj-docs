@@ -59,7 +59,7 @@ The session below build a `judge-tiervnoj`:
 
 ```shell-session
 $ git clone --recursive https://github.com/VNOI-Admin/judge-server.git
-$ cd judge/.docker
+$ cd judge-server/.docker
 $ make judge-tiervnoj
 ```
 
