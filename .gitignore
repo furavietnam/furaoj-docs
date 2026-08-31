@@ -1,0 +1,49 @@
+# --- AI & Agent Tooling (Internal Only) ---
+# Cursor
+.cursorrules
+.cursor/
+.cursorignore
+
+# Claude / Anthropic
+.claude/
+claude.json
+CLAUDE.md
+CLAUDE.md.local
+
+# Copilot & Windsurf
+.windsurfrules
+.codeium/
+.copilot/
+
+# Custom Agent/LLM Configs
+.agent/
+.ai/
+agents.md
+prompts.md
+
+# AI Memory, Context & Scratchpads
+*.scratchpad.md
+*.ai-notes.md
+memory-palace/
+.mempalace/
+
+# Context Dumps
+*.context.txt
+*.prompt.md
+ai-context/
+agent-logs/
+
+# Chat Logs & Agent Sessions
+*.chat.json
+agent-history/
+llm-logs/
+
+# AI Tooling & Local Docs
+ai-docs/
+llm-docs/
+*.ai.md
+
+# Superpowers / GSD Planning
+.superpowers/
+.planning/
+docs/superpowers/
