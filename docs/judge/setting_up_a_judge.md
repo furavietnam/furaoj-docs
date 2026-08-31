@@ -49,21 +49,21 @@ runtimes we run on [dmoj.ca](https://dmoj.ca). Tier 2 contains some in-between
 mix; read the `Dockerfile` for each tier for details. These images are rebuilt
 and tested every week to contain the latest runtime versions.
 
-?> FuraOJ uses a custom tier, `tierfuraoj`, which contains all the runtimes in Tier 1
+?> FuraOJ uses a custom tier, `tiervnoj`, which contains all the runtimes in Tier 1
 and some additional ones. You can find the list of supported runtimes [here](https://oj.fura.io.vn/runtimes).
-The Docker image is maintained at [furaoj/judge-tierfuraoj](https://hub.docker.com/r/furaoj/judge-tierfuraoj).
+The Docker image is maintained at [vnoj/judge-judge-tiervnoj](https://hub.docker.com/r/vnoj/judge-tiervnoj).
 
 #### From source
 
-The session below build a `judge-tierfuraoj`:
+The session below build a `judge-tiervnoj`:
 
 ```shell-session
 $ git clone --recursive https://github.com/VNOI-Admin/judge-server.git
 $ cd judge/.docker
-$ make judge-tierfuraoj
+$ make judge-tiervnoj
 ```
 
-The session below spawns a `tierfuraoj` judge image in the same server as the site server.
+The session below spawns a `tiervnoj` judge image in the same server as the site server.
 **It expects problems to be placed on the host under `/mnt/problems`, and judge-specific
 configuration to be in `/mnt/problems/judge.yml`.**
 
@@ -88,7 +88,7 @@ $ docker run \
     --cap-add=SYS_PTRACE \
     -d \
     --restart=always \
-    furaoj/judge-tierfuraoj:latest \
+    furaoj/judge-tiervnoj:latest \
     run -p 9999 -c /problems/judge.yml localhost -A 0.0.0.0 -a 12345
 ```
 
