@@ -10,7 +10,7 @@ problem_storage_globs:
   - /mnt/problems/folder3/year20[0-9][0-9]  # matches /mnt/problems/folder3/year2023, for example
 # All configuration for language executors.
 # If you're unsure of what values a language needs, your best bet is to consult the source of the executor:
-# <https://github.com/furavietnam/judge-server/tree/master/dmoj/executors>
+# <https://github.com/VNOI-Admin/judge-server/tree/master/dmoj/executors>
 runtime:
   ccl: /opt/ccl/lx86cl
   sed: /bin/sed

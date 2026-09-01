@@ -1,6 +1,6 @@
 # Supported languages
 
-The DMOJ supports grading in [56 languages](https://github.com/furavietnam/judge-server/tree/master/dmoj/executors):
+The DMOJ supports grading in [56 languages](https://github.com/furavietnam/judge-server/tree/main/dmoj/executors):
 Ada, Assembly (x64/x86), AWK, Brain\*\*\*\*,
 C (Clang/GCC), C#, C++14 (Clang/GCC),
 C++03/11/17/20, C11, COBOL, D, Dart, F#, Forth,
