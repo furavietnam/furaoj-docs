@@ -9,7 +9,7 @@ The FuraOJ is under active development, so occasionally you may wish to update. 
 First, switch to the site virtual environment, and pull the latest changes.
 
 ```
-(furaosite) $ git pull origin master
+(furaosite) $ git pull origin main
 ```
 
 Dependencies may have changed since the last time you updated, so install any missing ones now.
