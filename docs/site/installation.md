@@ -9,6 +9,7 @@ $ curl -o- https://fnm.vercel.app/install | bash
 $ source ~/.bashrc
 $ fnm install 24
 $ mkdir -p /mnt/FuraOJ
+$ mkdir -p /mnt/FuraOJ/logs
 $ mkdir -p /mnt/FuraOJ/media
 $ mkdir -p /mnt/FuraOJ/static
 $ mkdir -p /mnt/FuraOJ/contestdatacache
