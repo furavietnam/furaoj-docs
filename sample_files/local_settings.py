@@ -17,7 +17,7 @@ DEBUG = True  # Change to False once you are done with runserver testing.
 
 # Uncomment and set to the domain names this site is intended to serve.
 # You must do this once you set DEBUG to False.
-#ALLOWED_HOSTS = ['oj.fura.io.vn']
+ALLOWED_HOSTS = ['*']
 
 # Optional apps that DMOJ can make use of.
 INSTALLED_APPS += (
@@ -115,7 +115,7 @@ STATICFILES_FINDERS += ('compressor.finders.CompressorFinder',)
 # A tuple of (name, email) pairs that specifies those who will be mailed
 # when the server experiences an error when DEBUG = False.
 ADMINS = (
-    ('Your Name', 'your.email@example.com'),
+    ('Administrator', 'admin@oj.fura.io.vn'),
 )
 
 # The sender for the aforementioned emails.
@@ -131,13 +131,13 @@ SERVER_EMAIL = 'FuraOJ <noreply@oj.fura.io.vn>'
 # webserver to serve the static files. This is the directory where all the
 # static files DMOJ uses will be collected to.
 # You must configure your webserver to serve this directory as /static/ in production.
-STATIC_ROOT = '/tmp/static'
+STATIC_ROOT = '/mnt/FuraOJ/static'
 
 # URL to access static files.
-#STATIC_URL = '/static/'
+STATIC_URL = '/static/'
 
 # Uncomment to use hashed filenames with the cache framework.
-#STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 
 ############################################
@@ -155,12 +155,12 @@ TERMS_OF_SERVICE_URL = '//oj.fura.io.vn/tos/'  # Use a flatpage.
 # This is the directory where all the media files are stored.
 # Change this to somewhere more permanent.
 # You must configure your webserver to serve this directory in production.
-MEDIA_ROOT = '/tmp/media'
+MEDIA_ROOT = '/mnt/FuraOJ/media'
 
 ## Problem data settings.
 # This is the directory where all the problem data are stored.
 # Change this to somewhere more permanent.
-DMOJ_PROBLEM_DATA_ROOT = '/tmp/problem_data/'
+DMOJ_PROBLEM_DATA_ROOT = '/mnt/FuraOJ/problem_data/'
 
 ## Bridge controls.
 # The judge connection address and port; where the judges will connect to the site.
@@ -169,11 +169,11 @@ DMOJ_PROBLEM_DATA_ROOT = '/tmp/problem_data/'
 BRIDGED_JUDGE_ADDRESS = [('localhost', 9999)]
 
 # The bridged daemon bind address and port to communicate with the site.
-#BRIDGED_DJANGO_ADDRESS = [('localhost', 9998)]
+BRIDGED_DJANGO_ADDRESS = [('localhost', 9998)]
 
 ## DMOJ features.
 # Set to True to enable full-text searching for problems.
-ENABLE_FTS = False
+ENABLE_FTS = True
 
 # Set of email providers to ban when a user registers, e.g., {'throwawaymail.com'}.
 BAD_MAIL_PROVIDERS = set()
@@ -185,13 +185,13 @@ BAD_MAIL_PROVIDERS = set()
 
 ## Event server.
 # Uncomment to enable live updating.
-#EVENT_DAEMON_USE = True
+EVENT_DAEMON_USE = True
 
 # Uncomment this section to use websocket/daemon.js included in the site.
 #EVENT_DAEMON_POST = '<ws:// URL to post to>'
 
 # If you are using the defaults from the guide, it is this:
-#EVENT_DAEMON_POST = 'ws://127.0.0.1:15101/'
+EVENT_DAEMON_POST = 'ws://127.0.0.1:15101/'
 
 # These are the publicly accessed interface configurations.
 # They should match those used by the script.
@@ -201,9 +201,9 @@ BAD_MAIL_PROVIDERS = set()
 # i.e. the path to /channels/ exposed by the daemon, through whatever proxy setup you have.
 
 # Using our standard nginx configuration, these should be:
-#EVENT_DAEMON_GET = 'ws://<your domain>/event/'
-#EVENT_DAEMON_GET_SSL = 'wss://<your domain>/event/'  # Optional
-#EVENT_DAEMON_POLL = '/channels/'
+EVENT_DAEMON_GET = 'ws://127.0.0.1/event/'
+EVENT_DAEMON_GET_SSL = 'wss://127.0.0.1/event/'  # Optional
+EVENT_DAEMON_POLL = '/channels/'
 
 # If you would like to use the AMQP-based event server from <https://github.com/DMOJ/event-server>,
 # uncomment this section instead. This is more involved, and recommended to be done
@@ -212,16 +212,16 @@ BAD_MAIL_PROVIDERS = set()
 #EVENT_DAEMON_AMQP_EXCHANGE = '<AMQP exchange to use>'
 
 ## Celery
-#CELERY_BROKER_URL = 'redis://localhost:6379'
-#CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 
 ## CDN control.
 # Base URL for a copy of Ace editor.
 # Should contain ace.js, along with mode-*.js.
-ACE_URL = '//cdnjs.cloudflare.com/ajax/libs/ace/1.2.3/'
-JQUERY_JS = '//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js'
-SELECT2_JS_URL = '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js'
-SELECT2_CSS_URL = '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css'
+ACE_URL = '//cdnjs.cloudflare.com/ajax/libs/ace/1.44.0/'
+JQUERY_JS = '//cdnjs.cloudflare.com/ajax/libs/jquery/4.0.0/jquery.min.js'
+SELECT2_JS_URL = '//cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/js/select2.min.js'
+SELECT2_CSS_URL = '//cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/css/select2.min.css'
 
 # A map of Earth in equirectangular projection, for timezone selection.
 # Please try not to hotlink this poor site.
@@ -250,7 +250,7 @@ TIMEZONE_MAP = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Blue_M
 #DMOJ_PDF_PDFOID_URL = '<URL to your pdfoid install>.'
 
 # Directory to cache the PDF.
-#DMOJ_PDF_PROBLEM_CACHE = '/home/dmoj-uwsgi/pdfcache'
+#DMOJ_PDF_PROBLEM_CACHE = '/mnt/FuraOJ/pdfcache'
 
 # Path to use for nginx's X-Accel-Redirect feature.
 # Should be an internal location mapped to the above directory.
@@ -258,29 +258,29 @@ TIMEZONE_MAP = 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Blue_M
 
 ## Data download settings.
 # Uncomment to allow users to download their data.
-#DMOJ_USER_DATA_DOWNLOAD = True
+DMOJ_USER_DATA_DOWNLOAD = True
 
 # Directory to cache user data downloads.
 # It is the administrator's responsibility to clean up old files.
-#DMOJ_USER_DATA_CACHE = '/home/dmoj-uwsgi/userdatacache'
+DMOJ_USER_DATA_CACHE = '/mnt/FuraOJ/userdatacache'
 
 # Path to use for nginx's X-Accel-Redirect feature.
 # Should be an internal location mapped to the above directory.
-#DMOJ_USER_DATA_INTERNAL = '/userdatacache'
+DMOJ_USER_DATA_INTERNAL = '/userdatacache'
 
 # How often a user can download their data.
 #DMOJ_USER_DATA_DOWNLOAD_RATELIMIT = datetime.timedelta(days=1)
 
 # Uncomment to allow contest authors to download contest data
-#DMOJ_CONTEST_DATA_DOWNLOAD = True
+DMOJ_CONTEST_DATA_DOWNLOAD = True
 
 # Directory to cache contest data downloads.
 # It is the administrator's responsibility to clean up old files.
-#DMOJ_CONTEST_DATA_CACHE = '/home/dmoj-uwsgi/contestdatacache'
+DMOJ_CONTEST_DATA_CACHE = '/mnt/FuraOJ/contestdatacache'
 
 # Path to use for nginx's X-Accel-Redirect feature.
 # Should be an internal location mapped to the above directory.
-#DMOJ_CONTEST_DATA_INTERNAL = '/contestdatacache'
+DMOJ_CONTEST_DATA_INTERNAL = '/contestdatacache'
 
 # How often contest data can be exported.
 # This applies per contest, not per user.
