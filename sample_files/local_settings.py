@@ -92,7 +92,7 @@ STATICFILES_FINDERS += ('compressor.finders.CompressorFinder',)
 
 # The following block is included for your convenience, if you want
 # to use SMTP.
-#DEFAULT_FROM_EMAIL = "noreply@oj.fura.io.vn"
+#DEFAULT_FROM_EMAIL = 'noreply@oj.fura.io.vn'
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 #EMAIL_USE_TLS = True
 #EMAIL_HOST = 'domain.com'
