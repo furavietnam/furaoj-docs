@@ -8,7 +8,7 @@ $ apt install git gcc g++ make python3-dev python3-pip python3-venv libxml2-dev 
 $ curl -o- https://fnm.vercel.app/install | bash
 $ source ~/.bashrc
 $ fnm install 24
-$ mkdir -p /mnt/FuraOJ/{contestdatacache,logs,media,static,problem_data,userdatacache}
+$ mkdir -p /mnt/FuraOJ/{contestdatacache,logs,media,stati,sitec,problem_data,userdatacache}
 $ chmod -R 777 /mnt/FuraOJ
 ```
 
@@ -50,6 +50,7 @@ Now, fetch the site source code:
 (furaojsite) $ git clone --recursive https://github.com/furavietnam/furaoj.git site
 (furaojsite) $ chmod -R 755 site
 (furaojsite) $ cd site
+(furaojsite) $ cp {logo.png,favicon.ico,502.html} /mnt/FuraOJ/site
 ```
 
 Install Python dependencies into the virtual environment.
