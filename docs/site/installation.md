@@ -3,28 +3,25 @@
 ## Installing the prerequisites
 
 ```shell-session
-$ apt update
-$ apt install git gcc g++ make python3-dev python3-pip python3-venv libxml2-dev libxslt1-dev zlib1g-dev gettext curl redis-server pkg-config zip
-$ curl -o- https://fnm.vercel.app/install | bash
-$ source ~/.bashrc
-$ fnm install 24
-$ mkdir -p /mnt/FuraOJ/{contestdatacache,logs,media,static,site,problem_data,userdatacache}
-$ chmod -R 777 /mnt/FuraOJ
+sudo apt update
+sudo apt install git gcc g++ make python3-dev python3-pip python3-venv libxml2-dev libxslt1-dev zlib1g-dev gettext curl redis-server pkg-config zip acl postgresql libpq-dev
+sudo curl -fsSL https://deb.nodesource.com/setup_26.x | sudo -E bash -
+sudo apt-get install -y nodejs
+sudo mkdir -p /mnt/FuraOJ/{contestdatacache,logs,media,static,site,problem_data,userdatacache}
+sudo setfacl -R -m d:u::rwx,d:g::rwx,d:o::rwx /mnt/FuraOJ
+sudo setfacl -R -m u::rwx,g::rwx,o::rwx /mnt/FuraOJ
+sudo groupadd furaoj
+sudo useradd -m -g furaoj -s /bin/bash furaoj
+sudo usermod -aG sudo furaoj
+sudo cd /mnt/FuraOJ/
 ```
 
 ## Creating the database
 
-Next, we will set up the database using PostgreSQL. Please visit [the PostgreSQL site](https://www.postgresql.org/download/) and follow the download instructions.
+Next step is to set up the database itself. You should execute the commands listed below to create the necessary database and user.
 
 ```shell-session
-$ apt update
-$ apt install postgresql libpq-dev
-```
-
-The next step is to set up the database itself. You should execute the commands listed below to create the necessary database and user.
-
-```shell-session
-$ sudo -u postgres psql
+sudo -u postgres psql
 postgres> CREATE USER furaoj WITH PASSWORD '<your postgres password>';
 postgres> CREATE DATABASE furaoj OWNER furaoj;
 postgres> GRANT ALL PRIVILEGES ON DATABASE furaoj TO furaoj;
@@ -36,8 +33,8 @@ postgres> \q
 Now that you are done, you can start installing the site. First, create a virtual environment and activate it. Here, we'll create a virtual environment named `furaojsite`.
 
 ```shell-session
-$ python3 -m venv furaojsite
-$ . furaojsite/bin/activate
+python3 -m venv furaojsite
+. furaojsite/bin/activate
 ```
 
 You should see `(furaojsite)` prepended to your shell. Henceforth, `(furaojsite)` commands assume you are in the code directory, with the virtual environment active.
@@ -47,25 +44,28 @@ You should see `(furaojsite)` prepended to your shell. Henceforth, `(furaojsite)
 Now, fetch the site source code:
 
 ```shell-session
-(furaojsite) $ git clone --recursive https://github.com/furavietnam/furaoj.git site
-(furaojsite) $ chmod -R 755 site
-(furaojsite) $ cd site
-(furaojsite) $ cp {logo.png,favicon.ico,502.html} /mnt/FuraOJ/site
+(furaojsite) cd site
+(furaojsite) git clone --recursive https://github.com/furavietnam/furaoj.git .
 ```
 
 Install Python dependencies into the virtual environment.
 
 ```shell-session
-(furaojsite) $ pip3 install -r requirements.txt
+(furaojsite) pip3 install -r requirements.txt
 ```
 
 Install Node.js packages:
 
 ```shell-session
-(furaojsite) $ npm install
+(furaojsite) npm install
 ```
 
-You will now need to configure `dmoj/local_settings.py`. You should make a copy of [this sample settings file](https://github.com/furavietnam/furaoj-docs/blob/main/sample_files/local_settings.py) and read through it, making changes as necessary. Most importantly, you will want to update PostgreSQL credentials.
+You will now need to configure `dmoj/local_settings.py`. You should download the sample settings file using `curl`, open it with `nano` to make changes as necessary, and update your PostgreSQL credentials.
+
+```shell-session
+(furaojsite) curl -sSL -o dmoj/local_settings.py https://raw.githubusercontent.com/furavietnam/furaoj-docs/refs/heads/main/sample_files/local_settings.py
+(furaojsite) nano dmoj/local_settings.py
+```
 
 ?> Leave debug mode on for now; we'll disable it later after we've verified that the site works. <br> <br>
 Generally, it's recommended that you add your settings in `dmoj/local_settings.py` rather than modifying `dmoj/settings.py` directly. `settings.py` will automatically read `local_settings.py` and load it, so write your configuration there.
@@ -75,20 +75,20 @@ Generally, it's recommended that you add your settings in `dmoj/local_settings.p
 FuraOJ uses `sass` and `autoprefixer` to generate the site stylesheets. FuraOJ comes with a `make_style.sh` script that may be run to compile and optimize the stylesheets.
 
 ```shell-session
-(furaojsite) $ ./make_style.sh
+(furaojsite) ./make_style.sh
 ```
 
 Now, collect static files into `STATIC_ROOT` as specified in `dmoj/local_settings.py`.
 
 ```shell-session
-(furaojsite) $ ./manage.py collectstatic
+(furaojsite) ./manage.py collectstatic
 ```
 
 You will also need to generate internationalization files.
 
 ```shell-session
-(furaojsite) $ ./manage.py compilemessages
-(furaojsite) $ ./manage.py compilejsi18n
+(furaojsite) ./manage.py compilemessages
+(furaojsite) ./manage.py compilejsi18n
 ```
 
 ## Setting up Celery
@@ -98,7 +98,7 @@ The FuraOJ uses Celery workers to perform most of its heavy lifting, such as bat
 Start up the Redis server, which is needed by the Celery workers.
 
 ```shell-session
-$ service redis-server start
+sudo systemctl redis-server start
 ```
 
 Configure `local_settings.py` by uncommenting `CELERY_BROKER_URL` and `CELERY_RESULT_BACKEND`. By default, Redis listens on localhost port 6379, which is reflected in `local_settings.py`. You will need to update the addresses if you changed Redis's settings.
@@ -110,15 +110,13 @@ We will test that Celery works soon.
 We must generate the schema for the database, since it is currently empty.
 
 ```shell-session
-(furaojsite) $ ./manage.py migrate
+(furaojsite) ./manage.py migrate
 ```
 
 Next, load some initial data so that your install is not entirely blank.
 
 ```shell-session
-(furaojsite) $ ./manage.py loaddata navbar
-(furaojsite) $ ./manage.py loaddata language_small
-(furaojsite) $ ./manage.py loaddata demo
+(furaojsite) ./manage.py loaddata navbar language_small demo
 ```
 
 !> Keep in mind that the `demo` fixture creates a superuser account with a username and password of `admin`. If your
@@ -127,44 +125,14 @@ site is exposed to others, you should change the user's password or remove the u
 You should create an admin account with which to log in initially.
 
 ```shell-session
-(furaojsite) $ ./manage.py createsuperuser
+(furaojsite) ./manage.py createsuperuser
 ```
-
-## Running the server
 
 Now, you should verify that everything is going according to plan.
 
 ```shell-session
-(furaojsite) $ ./manage.py check
+(furaojsite) ./manage.py check
 ```
-
-At this point, you should attempt to run the server, and see if it all works.
-
-```shell-session
-(furaojsite) $ ./manage.py runserver 0.0.0.0:8000
-```
-
-You should Ctrl-C to exit after verifying.
-
-!> **Do not use `runserver` in production!** <br> <br>
-We will set up a proper webserver using nginx and uWSGI soon.
-
-You should also test to see if `bridged` runs.
-
-```shell-session
-(furaojsite) $ ./manage.py runbridged
-```
-
-If there are no errors after about 10 seconds, it probably works.
-You should Ctrl-C to exit.
-
-Next, test that the Celery workers run.
-
-```shell-session
-(furaojsite) $ celery -A dmoj_celery worker
-```
-
-You can Ctrl-C to exit.
 
 ## Setting up uWSGI
 
@@ -172,18 +140,10 @@ You can Ctrl-C to exit.
 In the rest of this guide, we will be installing `uwsgi` and `nginx` to serve the site, using `supervisord`
 to keep `site` and `bridged` running. It's likely other configurations may work, but they are unsupported.
 
-First, copy our `uwsgi.ini` ([link](https://github.com/furavietnam/furaoj-docs/blob/main/sample_files/uwsgi.ini)). You should change the paths to reflect your install.
-
-You need to install `uwsgi`.
+First, download our `uwsgi.ini` configuration file using `curl`. You should change the paths inside to reflect your install.
 
 ```shell-session
-(furaojsite) $ pip3 install uwsgi
-```
-
-To test, run:
-
-```shell-session
-(furaojsite) $ uwsgi --ini uwsgi.ini
+(furaojsite) curl -sSL -o uwsgi.ini https://raw.githubusercontent.com/furavietnam/furaoj-docs/refs/heads/main/sample_files/uwsgi.ini
 ```
 
 If it says workers are spawned, it probably works.
@@ -194,43 +154,51 @@ You should Ctrl-C to exit.
 You should now install `supervisord` and configure it.
 
 ```shell-session
-$ apt install supervisor
+(furaojsite) sudo apt install supervisor
 ```
 
-Copy our `site.conf` ([link](https://github.com/furavietnam/furaoj-docs/blob/main/sample_files/site.conf)) to `/etc/supervisor/conf.d/site.conf`, `bridged.conf` ([link](https://github.com/furavietnam/furaoj-docs/blob/main/sample_files/bridged.conf)) to `/etc/supervisor/conf.d/bridged.conf`, `celery.conf` ([link](https://github.com/furavietnam/furaoj-docs/blob/main/sample_files/celery.conf)) to `/etc/supervisor/conf.d/celery.conf` and fill in the fields.
-
-Next, reload `supervisord` and check that the site, bridged, and celery have started.
+Download `site.conf`, `bridged.conf`, and `celery.conf` directly to `/etc/supervisor/conf.d/` using `curl`:
 
 ```shell-session
-$ supervisorctl update
-$ supervisorctl status
+(furaojsite) sudo curl -sS -o /etc/supervisor/conf.d/site.conf https://raw.githubusercontent.com/furavietnam/furaoj-docs/refs/heads/main/sample_files/site.conf
+(furaojsite) sudo curl -sSL -o /etc/supervisor/conf.d/bridged.conf https://raw.githubusercontent.com/furavietnam/furaoj-docs/refs/heads/main/sample_files/bridged.conf
+(furaojsite) sudo curl -sSL -o /etc/supervisor/conf.d/celery.conf https://raw.githubusercontent.com/furavietnam/furaoj-docs/refs/heads/main/sample_files/celery.conf
+(furaojsite) sudo curl -sSL -o /etc/supervisor/conf.d/wsevent.conf https://raw.githubusercontent.com/furavietnam/furaoj-docs/refs/heads/main/sample_files/wsevent.conf
+(furaojsite) sudo supervisorctl reread && sudo supervisorctl update
 ```
-
-If all three processes are running, everything is good! Otherwise, peek at the logs and see what's wrong.
 
 ## Setting up nginx
 
 Now, it's time to set up `nginx`.
 
 ```shell-session
-$ apt install nginx
+(furaojsite) sudo apt install nginx
 ```
 
-You should copy the sample `nginx.conf` ([link](https://github.com/furavietnam/furaoj-docs/blob/main/sample_files/nginx.conf)), edit it and place it in wherever it is supposed to be for your nginx install.
-
-?> Typically, `nginx` site files are located in `/etc/nginx/conf.d`.
-Some installations might place it at `/etc/nginx/sites-available` and require a symlink in `/etc/nginx/sites-enabled`.
-
-Next, check if there are any issues with your nginx setup.
+Download the sample `nginx.conf` via `curl` directly into `/etc/nginx/sites-available/furaoj`, then use `nano` to edit and configure it.
 
 ```shell-session
-$ nginx -t
+(furaojsite) sudo curl -sSL -o /etc/nginx/sites-available/furaoj https://raw.githubusercontent.com/furavietnam/furaoj-docs/refs/heads/main/sample_files/nginx.conf
+(furaojsite) sudo ln -sf /etc/nginx/sites-available/furaoj /etc/nginx/sites-enabled/
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+Next, remove the default Nginx configuration to avoid port conflicts.
+
+```shell-session
+(furaojsite) sudo rm /etc/nginx/sites-enabled/default
+```
+
+Check if there are any issues with your nginx setup.
+
+```shell-session
+(furaojsite) sudo nginx -t
 ```
 
 If not, reload the `nginx` configuration.
 
 ```shell-session
-$ service nginx reload
+(furaojsite) sudo systemctl nginx reload
 ```
 
 You should be good to go. Visit the site at where you set it up to verify.
@@ -238,45 +206,3 @@ You should be good to go. Visit the site at where you set it up to verify.
 If it does not work, check `nginx` logs and `uwsgi` log `stdout`/`stderr` for details.
 
 ?> Now that your site is installed, remember to set `DEBUG` to `False` in `local_settings`. Leaving it `True` is a security risk.
-
-## Configuration of event server
-
-Create `config.js` inside directory `websocket` with the following content:
-
-```js
-const config = {
-  get_host: '127.0.0.1',
-  get_port: 15100,
-  post_host: '127.0.0.1',
-  post_port: 15101,
-  http_host: '127.0.0.1',
-  http_port: 15102,
-  long_poll_timeout: 29000
-};
-
-export default config;
-```
-
-This assumes you use `nginx`, or there be dragons.
-You may need to shuffle ports if they are already used.
-
-`get_port` should be the same as the port for `/event/` in `nginx.conf`.
-`http_port` should be the same as the port for `/channels/` in `nginx.conf`.
-`post_port` should be the same as the port in `EVENT_DAEMON_POST` in `local_settings`.
-You need to configure `EVENT_DAEMON_GET` and `EVENT_DAEMON_POLL`.
-You need to uncomment the relevant section in the `nginx` configuration.
-
-Need to install the dependencies.
-
-```shell-session
-(furaojsite) $ pip3 install websocket-client
-```
-
-Now copy `wsevent.conf` ([link](https://github.com/furavietnam/furaoj-docs/blob/main/sample_files/wsevent.conf)) to `/etc/supervisor/conf.d/wsevent.conf`, changing paths, and then update supervisor and nginx.
-
-```shell-session
-$ supervisorctl update
-$ supervisorctl restart bridged
-$ supervisorctl restart site
-$ service nginx restart
-```
