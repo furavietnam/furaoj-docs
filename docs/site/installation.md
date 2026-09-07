@@ -4,16 +4,16 @@
 
 ```shell-session
 sudo apt update
-sudo apt install git gcc g++ make python3-dev python3-pip python3-venv libxml2-dev libxslt1-dev zlib1g-dev gettext curl redis-server pkg-config zip acl postgresql libpq-dev
+sudo apt install -y git gcc g++ make python3-dev python3-pip python3-venv libxml2-dev libxslt1-dev zlib1g-dev gettext curl redis-server pkg-config zip acl postgresql libpq-dev
 sudo curl -fsSL https://deb.nodesource.com/setup_26.x | sudo -E bash -
 sudo apt-get install -y nodejs
 sudo mkdir -p /mnt/FuraOJ/{contestdatacache,logs,media,static,site,problem_data,userdatacache}
 sudo setfacl -R -m d:u::rwx,d:g::rwx,d:o::rwx /mnt/FuraOJ
 sudo setfacl -R -m u::rwx,g::rwx,o::rwx /mnt/FuraOJ
 sudo groupadd furaoj
-sudo useradd -m -g furaoj -s /bin/bash furaoj
-sudo usermod -aG sudo furaoj
-sudo cd /mnt/FuraOJ/
+sudo useradd -m -g furaoj -s /sbin/nologin furaoj
+sudo usermod -L furaoj
+cd /mnt/FuraOJ/
 ```
 
 ## Creating the database
@@ -98,7 +98,7 @@ The FuraOJ uses Celery workers to perform most of its heavy lifting, such as bat
 Start up the Redis server, which is needed by the Celery workers.
 
 ```shell-session
-sudo systemctl redis-server start
+sudo systemctl start redis-server
 ```
 
 Configure `local_settings.py` by uncommenting `CELERY_BROKER_URL` and `CELERY_RESULT_BACKEND`. By default, Redis listens on localhost port 6379, which is reflected in `local_settings.py`. You will need to update the addresses if you changed Redis's settings.
@@ -154,7 +154,7 @@ You should Ctrl-C to exit.
 You should now install `supervisord` and configure it.
 
 ```shell-session
-(furaojsite) sudo apt install supervisor
+(furaojsite) sudo apt install -y supervisor
 ```
 
 Download `site.conf`, `bridged.conf`, and `celery.conf` directly to `/etc/supervisor/conf.d/` using `curl`:
@@ -172,33 +172,17 @@ Download `site.conf`, `bridged.conf`, and `celery.conf` directly to `/etc/superv
 Now, it's time to set up `nginx`.
 
 ```shell-session
-(furaojsite) sudo apt install nginx
+(furaojsite) sudo apt install -y nginx
 ```
 
 Download the sample `nginx.conf` via `curl` directly into `/etc/nginx/sites-available/furaoj`, then use `nano` to edit and configure it.
 
 ```shell-session
+(furaojsite) sudo rm /etc/nginx/sites-enabled/default
 (furaojsite) sudo curl -sSL -o /etc/nginx/sites-available/furaoj https://raw.githubusercontent.com/furavietnam/furaoj-docs/refs/heads/main/sample_files/nginx.conf
+(furaojsite) sudo nano /etc/nginx/sites-available/furaoj
 (furaojsite) sudo ln -sf /etc/nginx/sites-available/furaoj /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
-```
-
-Next, remove the default Nginx configuration to avoid port conflicts.
-
-```shell-session
-(furaojsite) sudo rm /etc/nginx/sites-enabled/default
-```
-
-Check if there are any issues with your nginx setup.
-
-```shell-session
-(furaojsite) sudo nginx -t
-```
-
-If not, reload the `nginx` configuration.
-
-```shell-session
-(furaojsite) sudo systemctl nginx reload
 ```
 
 You should be good to go. Visit the site at where you set it up to verify.
