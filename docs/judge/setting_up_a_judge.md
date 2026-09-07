@@ -58,9 +58,10 @@ The Docker image is maintained at [vnoj/judge-judge-tiervnoj](https://hub.docker
 The session below build a `judge-tiervnoj`:
 
 ```shell-session
+$ cd /mnt/FuraOJ
 $ git clone --recursive https://github.com/VNOI-Admin/judge-server.git
 $ cd judge-server/.docker
-$ make judge-tiervnoj
+$ sudo -u furaoj make judge-tiervnoj
 ```
 
 The session below spawns a `tiervnoj` judge image in the same server as the site server.
@@ -81,7 +82,7 @@ problem_storage_globs:
 ```
 
 ```shell-session
-$ docker run \
+$ sudo -u furaoj docker run \
     --name judge \
     --network="host" \
     -v /mnt/problems:/problems \
