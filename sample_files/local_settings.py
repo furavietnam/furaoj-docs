@@ -115,7 +115,7 @@ STATICFILES_FINDERS += ('compressor.finders.CompressorFinder',)
 # A tuple of (name, email) pairs that specifies those who will be mailed
 # when the server experiences an error when DEBUG = False.
 ADMINS = (
-    ('Administrator', 'admin@oj.fura.io.vn'),
+    ('Administrator', 'administrator@oj.fura.io.vn'),
 )
 
 # The sender for the aforementioned emails.
