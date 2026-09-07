@@ -1,10 +1,12 @@
+
 # Installing the site
+(Tested on Debian 13)
 
 ## Installing the prerequisites
 
 ```shell-session
 sudo apt update
-sudo apt install -y git gcc g++ make python3-dev python3-pip python3-venv libxml2-dev libxslt1-dev zlib1g-dev gettext curl redis-server pkg-config zip acl postgresql libpq-dev
+sudo apt install -y git gcc g++ make python3-dev python3-pip python3-venv libxml2-dev libxslt1-dev zlib1g-dev gettext curl redis-server pkg-config zip acl postgresql libpq-dev ca-certificates
 sudo curl -fsSL https://deb.nodesource.com/setup_26.x | sudo -E bash -
 sudo apt-get install -y nodejs
 sudo mkdir -p /mnt/FuraOJ/{contestdatacache,logs,media,static,site,problem_data,userdatacache}
@@ -13,6 +15,21 @@ sudo setfacl -R -m u::rwx,g::rwx,o::rwx /mnt/FuraOJ
 sudo groupadd furaoj
 sudo useradd -m -g furaoj -s /sbin/nologin furaoj
 sudo usermod -L furaoj
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
+Types: deb
+URIs: https://download.docker.com/linux/debian
+Suites: $(. /etc/os-release && echo "$VERSION_CODENAME")
+Components: stable
+Architectures: $(dpkg --print-architecture)
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo usermod -aG docker furaoj
+sudo systemctl restart docker
 cd /mnt/FuraOJ/
 ```
 
