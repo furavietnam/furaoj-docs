@@ -1,4 +1,3 @@
-
 # Installing the site
 (Tested on Debian 13)
 
