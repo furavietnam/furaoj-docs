@@ -91,11 +91,12 @@ STATICFILES_FINDERS += ('compressor.finders.CompressorFinder',)
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # The following block is included for your convenience, if you want
-# to use Gmail.
+# to use SMTP.
+#DEFAULT_FROM_EMAIL = "noreply@oj.fura.io.vn"
 #EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 #EMAIL_USE_TLS = True
-#EMAIL_HOST = 'smtp.gmail.com'
-#EMAIL_HOST_USER = '<your account>@gmail.com'
+#EMAIL_HOST = 'domain.com'
+#EMAIL_HOST_USER = '<your account>@domain.com'
 #EMAIL_HOST_PASSWORD = '<your password>'
 #EMAIL_PORT = 587
 
